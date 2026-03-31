@@ -20,12 +20,6 @@
 
 ---
 
-## 📸 Preview
-
-> _Add screenshots here after deployment_
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -68,12 +62,12 @@
 
 ```
 genesys-pottery/
-├── app.py                  # Main Flask application
-├── pottery.db              # SQLite database (auto-created)
-├── requirements.txt        # Python dependencies
+├── app.py                  
+├── pottery.db              
+├── requirements.txt        
 ├── static/
-│   ├── images/             # Product images
-│   └── uploads/            # User-uploaded pottery images
+│   ├── images/             
+│   └── uploads/            
 └── templates/
     ├── base.html
     ├── login.html
@@ -88,68 +82,16 @@ genesys-pottery/
 
 ## 🛠️ Tech Stack
 
-- **Backend** — Python + Flask
-- **Database** — SQLite (via `sqlite3`)
-- **Frontend** — HTML, CSS, JavaScript (vanilla)
-- **Auth** — Werkzeug password hashing
-- **Fonts** — Playfair Display (Google Fonts)
-
----
-
-## 📦 requirements.txt
-
-Make sure your `requirements.txt` includes:
-```
-flask
-werkzeug
-```
-
-Generate it automatically with:
-```bash
-pip freeze > requirements.txt
-```
+Python + Flask
+SQLite
+HTML, CSS, JavaScript
+Werkzeug for password hashing
 
 ---
 
 ## ☁️ Deployment (Free)
 
-This app needs a Python backend, so it **cannot** run on GitHub Pages.
-
-### Deploy on [Render.com](https://render.com) (recommended — free tier)
-
-1. Push your code to GitHub
-2. Go to [render.com](https://render.com) → **New Web Service**
-3. Connect your GitHub repo
-4. Set:
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `gunicorn app:app`
-5. Click **Deploy** 🎉
-
-> Don't forget to add `gunicorn` to your `requirements.txt` before deploying.
-
----
-
-## 🔒 Environment Variables
-
-For production, replace the hardcoded secret key in `app.py`:
-
-```python
-app.secret_key = os.environ.get("SECRET_KEY", "fallback-dev-key")
-```
-
-Set `SECRET_KEY` as an environment variable on your hosting platform.
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome! For major changes, please open an issue first.
-
-1. Fork the repo
-2. Create your branch: `git checkout -b feature/your-feature`
-3. Commit changes: `git commit -m "Add your feature"`
-4. Push: `git push origin feature/your-feature`
-5. Open a Pull Request
+This needs a Python backend so it won't work on GitHub Pages. I'd recommend deploying on Render.com — it's free and works great with Flask.
 
 ---
 
