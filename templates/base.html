@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genesys School of Pottery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --beige: #e8e0d5;
+    --beige-light: #f2ede8;
+    --brown: #8B5E3C;
+    --brown-dark: #6b4423;
+    --brown-btn: #a0673a;
+    --text: #3b2a1a;
+    --muted: #7a6a5a;
+    --card-bg: rgba(255,255,255,0.82);
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Lato', sans-serif;
+    background-color: var(--beige);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .bg-pottery {
+    background: url('https://images.unsplash.com/photo-1555375771-14b2a63968a8?w=1600&q=80') center/cover no-repeat fixed;
+    min-height: 100vh;
+  }
+  .overlay {
+    background: rgba(232,224,213,0.55);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 8px 40px rgba(100,60,20,0.13);
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--brown-dark);
+    font-size: 1.9rem;
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+  .subtitle {
+    color: var(--muted);
+    text-align: center;
+    font-size: 0.95rem;
+    margin-bottom: 1.8rem;
+  }
+  input[type=text], input[type=email], input[type=password] {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid #d5c9ba;
+    border-radius: 10px;
+    background: #faf7f3;
+    font-size: 0.97rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+    outline: none;
+    transition: border 0.2s;
+  }
+  input:focus { border-color: var(--brown); }
+  .btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--brown-btn);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.03em;
+  }
+  .btn:hover { background: var(--brown-dark); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--brown-btn);
+    color: var(--brown-btn);
+  }
+  .btn-outline:hover { background: var(--brown-btn); color: #fff; }
+  .link-row {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.93rem;
+    color: var(--muted);
+  }
+  .link-row a {
+    color: var(--brown);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .link-row a:hover { text-decoration: underline; }
+  .error {
+    background: #fdecea;
+    color: #c0392b;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  nav {
+    background: rgba(232,224,213,0.95);
+    backdrop-filter: blur(8px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(100,60,20,0.08);
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    color: var(--brown-dark);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.2rem; align-items: center; }
+  .nav-links a {
+    color: var(--brown);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .nav-links a:hover { background: rgba(139,94,60,0.12); }
+  .streak-badge {
+    background: var(--brown-btn);
+    color: #fff;
+    border-radius: 20px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(160,103,58,0.4); }
+    50%      { box-shadow: 0 0 0 10px rgba(160,103,58,0); }
+  }
+  .anim-fade-up  { animation: fadeUp 0.6s ease both; }
+  .anim-fade-in  { animation: fadeIn 0.5s ease both; }
+  .anim-scale-in { animation: scaleIn 0.55s cubic-bezier(.34,1.56,.64,1) both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.35s; }
+  .delay-4 { animation-delay: 0.5s; }
+  .delay-5 { animation-delay: 0.65s; }
+</style>
+{% block head %}{% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  .page-bg { background: var(--beige-light); min-height: 100vh; }
+  .market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .product-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(100,60,20,0.09);
+    transition: transform 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    animation: fadeUp 0.5s ease both;
+  }
+  .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(100,60,20,0.16); }
+  .product-card img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    background: #e8ddd0;
+    transition: transform 0.35s;
+  }
+  .product-card:hover img { transform: scale(1.04); }
+  .img-wrap { overflow: hidden; }
+  .product-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--brown-dark); font-weight: 600; }
+  .product-tags { color: var(--muted); font-size: 0.82rem; }
+  .like-btn {
+    margin-top: auto;
+    background: #f2ede8;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--brown);
+    font-weight: 700;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    justify-content: center;
+  }
+  .like-btn:hover { background: var(--brown-btn); color: #fff; }
+  .like-btn.liked { background: var(--brown-btn); color: #fff; }
+  .like-btn:active { transform: scale(0.95); }
+  .page-title { font-family: 'Playfair Display', serif; color: var(--brown-dark); font-size: 1.6rem; padding: 1.5rem 2rem 0.5rem; max-width: 1100px; margin: 0 auto; }
+  .img-placeholder { width: 100%; height: 190px; background: linear-gradient(135deg, #d5c5b0 0%, #c4b09a 100%); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(60,35,10,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(3px);
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #faf7f3;
+    border-radius: 18px;
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(60,35,10,0.25);
+    animation: scaleIn 0.35s cubic-bezier(.34,1.56,.64,1) both;
+    position: relative;
+  }
+  .modal-img { width: 100%; height: 240px; object-fit: cover; }
+  .modal-body { padding: 1.5rem; }
+  .modal-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--brown-dark); margin-bottom: 0.3rem; }
+  .modal-tags { color: var(--muted); font-size: 0.83rem; margin-bottom: 1rem; }
+  .modal-info { color: var(--text); font-size: 0.95rem; line-height: 1.7; }
+  .modal-info p { margin-bottom: 0.4rem; }
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 14px;
+    background: rgba(255,255,255,0.85);
+    border: none;
+    border-radius: 50%;
+    width: 32px; height: 32px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    z-index: 1;
+  }
+  .modal-close:hover { background: #fff; }
+  .modal-divider { border: none; border-top: 1px solid #e8ddd0; margin: 1rem 0; }
+  .modal-like-row { display: flex; justify-content: flex-end; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="page-bg">
+  <nav>
+    <a class="nav-brand" href="/marketplace">🏺 Genesys Pottery</a>
+    <div class="nav-links">
+      <span class="streak-badge">🔥 {{ streak }} day streak</span>
+      <a href="/streak">My Streak</a>
+      <a href="/sell">Sell</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <div class="page-title">Marketplace 🛒</div>
+  <div class="market-grid">
+    {% for p in products %}
+    {% set pid = p['id'] %}
+    {% set pname = p['name'] %}
+    {% set pimage = p['image'] %}
+    {% set ptags = p['tags'] %}
+    {% set is_liked = (pid in liked) %}
+    <div class="product-card" style="animation-delay: {{ loop.index0 * 0.08 }}s"
+         onclick="openModal({{ pid }}, '{{ pname }}', '{{ pimage }}', '{{ ptags }}', {{ is_liked | lower }})">
+      <div class="img-wrap">
+        <img src="/static/images/{{ pimage }}" alt="{{ pname }}"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="img-placeholder" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">{{ pname }}</div>
+        <div class="product-tags">{{ ptags }}</div>
+        <button class="like-btn {% if is_liked %}liked{% endif %}"
+                id="like-btn-{{ pid }}"
+                onclick="event.stopPropagation(); toggleLike({{ pid }})">
+          ❤️ Like
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Product detail modal -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal-box" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modal-img" class="modal-img" src="" alt="">
+    <div class="modal-body">
+      <div id="modal-name" class="modal-name"></div>
+      <div id="modal-tags" class="modal-tags"></div>
+      <hr class="modal-divider">
+      <div id="modal-info" class="modal-info"></div>
+      <hr class="modal-divider">
+      <div class="modal-like-row">
+        <button id="modal-like-btn" class="like-btn" style="width:auto;padding:0.5rem 1.2rem"
+                onclick="toggleLikeModal()">❤️ Like</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const infoMap = {
+  'small_pots.jpg':   ['Made with hand-thrown earthen clay', 'Finished with a matte oxide glaze', 'Perfect for succulents and small herbs'],
+  'long_pot.jpg':     ['Crafted using white stoneware clay', 'Wheel-thrown and kiln-fired at high temp', 'Decorated with carved texture patterns'],
+  'glazed_pot.jpg':   ['Built from red terracotta clay', 'Drip-glazed in coral and cream', 'Each piece is unique — no two are alike'],
+  'unique_pots.jpg':  ['Sculpted by hand from buff clay', 'Features a hand-carved animal motif', 'Coated in a warm natural slip finish'],
+  'plant_holder.jpg': ['Wheel-thrown celadon stoneware', 'Glazed in soft sage green tones', 'Includes a snug drainage saucer'],
+  'designs.jpg':      ['Hand-sculpted figure from coil clay', 'No glaze — raw fired clay texture', 'One-of-a-kind sculptural art piece'],
+  'clay_mug.jpg':     ['Made from speckled stoneware clay', 'Each mug hand-painted with a motif', 'Food-safe glaze, dishwasher friendly'],
+};
+
+let currentPid = null;
+
+function openModal(pid, name, image, tags, liked) {
+  currentPid = pid;
+  document.getElementById('modal-img').src = '/static/images/' + image;
+  document.getElementById('modal-name').textContent = name;
+  document.getElementById('modal-tags').textContent = tags;
+  const info = infoMap[image] || ['Handcrafted with care', 'Made from quality clay', 'Unique artisan piece'];
+  document.getElementById('modal-info').innerHTML = info.map(l => `<p>🏺 ${l}</p>`).join('');
+  const likeBtn = document.getElementById('modal-like-btn');
+  likeBtn.className = 'like-btn' + (liked ? ' liked' : '');
+  likeBtn.style.width = 'auto';
+  likeBtn.style.padding = '0.5rem 1.2rem';
+
+  const card = document.querySelector(`[onclick*="openModal(${pid},"]`);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  setTimeout(() => {
+    document.getElementById('modal').classList.add('open');
+  }, 300);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  currentPid = null;
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+async function toggleLike(pid) {
+  const res = await fetch(`/like/${pid}`, { method: 'POST' });
+  const data = await res.json();
+  const btn = document.getElementById(`like-btn-${pid}`);
+  btn.classList.toggle('liked', data.liked);
+}
+
+async function toggleLikeModal() {
+  if (!currentPid) return;
+  const res = await fetch(`/like/${currentPid}`, { method: 'POST' });
+  const data = await res.json();
+  const modalBtn = document.getElementById('modal-like-btn');
+  modalBtn.classList.toggle('liked', data.liked);
+  const cardBtn = document.getElementById(`like-btn-${currentPid}`);
+  if (cardBtn) cardBtn.classList.toggle('liked', data.liked);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+{% endblock %}

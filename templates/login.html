@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="bg-pottery">
+  <div class="overlay">
+    <div class="card anim-scale-in">
+      <div style="text-align:center;font-size:2rem;margin-bottom:0.5rem;animation:float 3s ease-in-out infinite">🎨 🌿</div>
+      <h1 class="anim-fade-up delay-1">Genesys School of Pottery</h1>
+      <p class="subtitle anim-fade-up delay-2">Your creative sanctuary awaits — log in to keep spinning magic!</p>
+      {% if error %}<div class="error anim-fade-up">{{ error }}</div>{% endif %}
+      <form method="POST">
+        <input class="anim-fade-up delay-2" type="email" name="email" placeholder="Email address" required>
+        <input class="anim-fade-up delay-3" type="password" name="password" placeholder="Password" required>
+        <button class="btn anim-fade-up delay-4" type="submit" style="animation: pulse 2s infinite 1s">Enter the Workshop 🔓</button>
+      </form>
+      <div class="link-row anim-fade-up delay-5">
+        New to the wheel? <a href="/register">Start Your Pottery Journey</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

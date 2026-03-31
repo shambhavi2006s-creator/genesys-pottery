@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="bg-pottery">
+  <div class="overlay">
+    <div class="card">
+      <h1 style="margin-bottom:0.3rem">Upload Your Pottery Piece</h1>
+      <p class="subtitle">Share your creation with the world 🏺</p>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Enter product name" required>
+        <input type="file" name="image" accept="image/*" required
+               style="padding:0.6rem;border:1.5px solid #d5c9ba;border-radius:10px;background:#faf7f3;width:100%;margin-bottom:1rem;">
+        <button class="btn" type="submit">Upload Product</button>
+      </form>
+      <div class="link-row" style="margin-top:1rem;display:flex;gap:1.5rem;justify-content:center">
+        <a href="/streak">🏺 Back to Streak</a>
+        <a href="/marketplace">🛍️ View Marketplace</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
